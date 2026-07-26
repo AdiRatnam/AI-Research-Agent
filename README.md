@@ -21,13 +21,27 @@ The project consists of two core layers seamlessly interacting over the Model Co
 
 ```mermaid
 graph TD
-    Client[client.py (Agent/LLM)] <--> |stdio / JSON-RPC| Server[server.py (FastMCP)]
-    Server --> T1[Tool: research_topic]
-    Server --> T2[Tool: manage_report]
-    Server --> T3[Tool: render_dashboard]
-    T1 -.-> |duckduckgo| Web(Internet)
-    T2 -.-> |File I/O| FS(reports/ directory)
-    T3 -.-> |Background Process| UI(Prefab Dashboard)
+
+    Client["client.py<br/>Agent / LLM"]
+    Server["server.py<br/>FastMCP Server"]
+
+    T1["research_topic()"]
+    T2["manage_report()"]
+    T3["render_dashboard()"]
+
+    Web["Internet (DuckDuckGo / API)"]
+    File["reports/ Directory"]
+    UI["Prefab Dashboard"]
+
+    Client <-->|stdio / JSON-RPC| Server
+
+    Server --> T1
+    Server --> T2
+    Server --> T3
+
+    T1 --> Web
+    T2 --> File
+    T3 --> UI
 ```
 
 1. **`client.py`**: Initializes the Gemini LLM client, connects to the `server.py` using `stdio_client`, and translates MCP tool schemas into Gemini Function Declarations.
