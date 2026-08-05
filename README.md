@@ -10,7 +10,7 @@ This project implements an autonomous AI Research Agent using the **Model Contex
 - **MCP Server Architecture**: Provides isolated context and tools out-of-the-box over the `stdio` transport.
 - **Web Research**: Integrates `duckduckgo-search` for real-time web scraping and topic summarization.
 - **File Management**: A fully functional local CRUD system that creates markdown reports.
-- **Dynamic UI Generation**: Automatically spins up a **Prefab UI** dashboard in the background to visualize the research results.
+- **Dynamic UI Generation**: Automatically spins up a **Prefab UI** dashboard in the background to visualize the research results, featuring a professional tabbed layout and dynamic metrics based on extracted data.
 - **Rate Limit Resilience**: The client features an intelligent backoff system that intercepts `429` quota limits and seamlessly resumes operations without crashing.
 
 ---

@@ -95,40 +95,63 @@ def render_dashboard(title: str, summary: str, key_points: list[str], references
     
     # Generate the prefab python file
     dashboard_code = f"""
-from prefab_ui.components import Card, CardContent, Column, H1, H3, P, Badge, Separator, Markdown
+from prefab_ui.components import (
+    Card, CardContent, CardHeader, CardTitle, Column, Row, 
+    H1, P, Badge, Separator, Markdown, Metric, Grid, GridItem, Tabs, Tab
+)
 from prefab_ui.app import PrefabApp as App
 
 app = App(title="AI Research Dashboard")
 
 with app:
-    with Column(gap=4, className="p-8 max-w-4xl mx-auto"):
-        H1("{title}", className="text-4xl font-extrabold text-blue-600 mb-2")
-        with Badge(variant="secondary"):
-            P("File: {file_name}")
-        
+    with Column(gap=6, className="p-8 max-w-6xl mx-auto"):
+        with Row(className="justify-between items-center"):
+            with Column(gap=1):
+                H1("AI Research Report", className="text-4xl font-extrabold tracking-tight")
+                P("{title}", className="text-muted-foreground text-lg")
+            with Badge(variant="secondary", className="text-sm px-3 py-1"):
+                P("Source: {file_name}")
+
         Separator()
-        
-        with Card(className="shadow-lg border-t-4 border-t-blue-500"):
-            with CardContent(className="p-6"):
-                H3("Summary", className="text-2xl font-bold mb-4")
-                P(\"\"\"{summary}\"\"\", className="text-gray-700 leading-relaxed")
-        
-        with Card(className="shadow-lg border-t-4 border-t-green-500"):
-            with CardContent(className="p-6"):
-                H3("Key Points", className="text-2xl font-bold mb-4")
+
+        with Grid(columns=2, gap=4):
+            with GridItem():
+                with Card(className="shadow-sm"):
+                    with CardContent(className="p-6"):
+                        Metric(label="Key Points Extracted", value={len(key_points)})
+            with GridItem():
+                with Card(className="shadow-sm"):
+                    with CardContent(className="p-6"):
+                        Metric(label="References Found", value={len(references)})
+
+        with Tabs(default_value="summary"):
+            with Tab(value="summary", label="Summary"):
+                with Card(className="mt-4 shadow-md border-t-4 border-t-blue-500"):
+                    with CardHeader():
+                        CardTitle("Research Summary", className="text-2xl text-blue-700")
+                    with CardContent():
+                        P(\"\"\"{summary}\"\"\", className="text-gray-700 leading-relaxed text-lg")
+
+            with Tab(value="key_points", label="Key Points"):
+                with Card(className="mt-4 shadow-md border-t-4 border-t-green-500"):
+                    with CardHeader():
+                        CardTitle("Key Points", className="text-2xl text-green-700")
+                    with CardContent():
 """
     # Key points as markdown list
     kp_md = "\\n".join([f"- {kp}" for kp in key_points]).replace('"', '\\"').replace('\\', '\\\\')
-    dashboard_code += f'                Markdown(\"\"\"{kp_md}\"\"\")\n'
+    dashboard_code += f'                        Markdown(\"\"\"{kp_md}\"\"\")\n'
 
     dashboard_code += """
-        with Card(className="shadow-lg border-t-4 border-t-purple-500"):
-            with CardContent(className="p-6"):
-                H3("References", className="text-2xl font-bold mb-4")
+            with Tab(value="references", label="References"):
+                with Card(className="mt-4 shadow-md border-t-4 border-t-purple-500"):
+                    with CardHeader():
+                        CardTitle("References", className="text-2xl text-purple-700")
+                    with CardContent():
 """
     # References as markdown list
     ref_md = "\\n".join([f"- [{ref}]({ref})" for ref in references]).replace('"', '\\"').replace('\\', '\\\\')
-    dashboard_code += f'                Markdown(\"\"\"{ref_md}\"\"\")\n'
+    dashboard_code += f'                        Markdown(\"\"\"{ref_md}\"\"\")\n'
 
     with open("dashboard.py", "w", encoding="utf-8") as f:
         f.write(dashboard_code)
