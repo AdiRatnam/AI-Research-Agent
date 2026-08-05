@@ -125,14 +125,14 @@ with app:
                         Metric(label="References Found", value={len(references)})
 
         with Tabs(default_value="summary"):
-            with Tab(value="summary", label="Summary"):
+            with Tab(value="summary", title="Summary"):
                 with Card(className="mt-4 shadow-md border-t-4 border-t-blue-500"):
                     with CardHeader():
                         CardTitle("Research Summary", className="text-2xl text-blue-700")
                     with CardContent():
                         P(\"\"\"{summary}\"\"\", className="text-gray-700 leading-relaxed text-lg")
 
-            with Tab(value="key_points", label="Key Points"):
+            with Tab(value="key_points", title="Key Points"):
                 with Card(className="mt-4 shadow-md border-t-4 border-t-green-500"):
                     with CardHeader():
                         CardTitle("Key Points", className="text-2xl text-green-700")
@@ -143,7 +143,7 @@ with app:
     dashboard_code += f'                        Markdown(\"\"\"{kp_md}\"\"\")\n'
 
     dashboard_code += """
-            with Tab(value="references", label="References"):
+            with Tab(value="references", title="References"):
                 with Card(className="mt-4 shadow-md border-t-4 border-t-purple-500"):
                     with CardHeader():
                         CardTitle("References", className="text-2xl text-purple-700")
